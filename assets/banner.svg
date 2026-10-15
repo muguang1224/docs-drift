@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="300" viewBox="0 0 1280 300" role="img" aria-label="docs-drift — find where documentation stopped matching the code">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="55%" stop-color="#0d1522"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1f6feb" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#1f6feb" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="300" rx="16" fill="url(#bg)"/>
+  <rect width="1280" height="300" rx="16" fill="none" stroke="#30363d"/>
+  <rect width="640" height="300" rx="16" fill="url(#glow)"/>
+  <rect x="84" y="112" width="48" height="64" rx="6" fill="none" stroke="#1f6feb" stroke-width="3" stroke-opacity="0.45"/><rect x="100" y="124" width="48" height="64" rx="6" fill="#0d1117" stroke="#58a6ff" stroke-width="3"/><path d="M110 142 h28 M110 154 h28 M110 166 h18" stroke="#a5d6ff" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"/><path d="M146 108 C158 100 168 96 178 92" fill="none" stroke="#a5d6ff" stroke-width="3" stroke-dasharray="6 6" stroke-opacity="0.75"/><path d="M170 86 l10 3 l-7 7 z" fill="#a5d6ff"/>
+  <text x="222" y="138" font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="54" font-weight="700" fill="#f0f6fc" letter-spacing="-1">docs-drift</text>
+  <text x="225" y="180" font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="23" fill="#8b949e">Docs vs code — catch the drift you can verify</text>
+  <g font-family="ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="15">
+    <rect x="224" y="212" width="148" height="36" rx="18" fill="#1f6feb" fill-opacity="0.16" stroke="#1f6feb" stroke-opacity="0.55"/><text x="298" y="236" text-anchor="middle" fill="#a5d6ff">0 dependencies</text><rect x="386" y="212" width="172" height="36" rx="18" fill="#ffffff" fill-opacity="0.04" stroke="#30363d"/><text x="472" y="236" text-anchor="middle" fill="#c9d1d9">DRIFT001-DRIFT008</text><rect x="572" y="212" width="123" height="36" rx="18" fill="#ffffff" fill-opacity="0.04" stroke="#30363d"/><text x="633" y="236" text-anchor="middle" fill="#c9d1d9">fence-aware</text><rect x="709" y="212" width="91" height="36" rx="18" fill="#ffffff" fill-opacity="0.04" stroke="#30363d"/><text x="754" y="236" text-anchor="middle" fill="#c9d1d9">CI gate</text>
+  </g>
+  <text x="1248" y="52" text-anchor="end" font-family="ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace" font-size="16" fill="#484f58">stdlib only</text>
+</svg>

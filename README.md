@@ -1,59 +1,44 @@
 # docs-drift
 
-**Find where your documentation stopped matching your code.** Point it at a repo; it compares markdown against the actual source tree and reports the checkable mismatches — dead links, broken anchors, stale version numbers, renamed flags and symbols that never made it back into the docs.
+<img src="assets/banner.svg" alt="docs-drift — find where documentation stopped matching the code" width="880">
 
-No network. No rewriting. No prose opinions. Just the drift you can verify.
+[![tests](https://img.shields.io/badge/tests-31%20passing-brightgreen)](#tests)
+[![python](https://img.shields.io/badge/python-3.8%2B-blue)](#)
+[![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](#)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-```console
-$ docs-drift .
-# docs-drift report
+**Find where your documentation stopped matching your code — the part that's mechanically checkable.**
 
-Root: `/home/you/proj`
+Point it at a repo; it compares markdown against the actual source tree and reports the concrete mismatches: dead links, broken anchors, version numbers that disagree with the manifest, identifiers and CLI flags mentioned in the docs that no longer exist in source, a CHANGELOG missing an entry for the current version. Each with a file and line. No network, no rewriting, no prose opinions.
 
-**3 finding(s)** — 0 high, 1 medium, 2 low, 0 info
+> This is a [Claude / Agent Skill](https://claude.com/docs): a `SKILL.md` file plus helper scripts that an AI agent can load and run. Drop the folder into your skills directory and ask "is my README still accurate after this refactor?"
 
-## `DRIFT005` [MEDIUM] README.md:42
-
-documented flag --frobnicate is not defined anywhere in source
-
-> Remove the stale flag or implement it.
-...
-```
+<img src="assets/demo.svg" alt="docs-drift terminal demo — a stale version, a removed flag, and a dead link" width="820">
 
 ## Why
 
-A README is a promise about the code. Refactors silently break it: a flag gets renamed, a function is deleted, the version badge is never bumped, a link rots in a moved file. Nothing fails, so nobody notices until a user follows the docs and hits a wall. docs-drift turns "our docs might be stale" into a concrete, line-numbered list.
+A README is a promise about the code. Refactors silently break it: a flag gets renamed, a function is deleted, the version badge is never bumped, a link rots in a moved file. Nothing fails, so nobody notices until a user follows the docs and hits a wall. `docs-drift` turns "our docs might be stale" into a concrete, line-numbered list.
 
-## Install
-
-No install. It's a single standard-library script.
+## Quick start
 
 ```bash
-git clone https://github.com/muguang1224/docs-drift
-python3 docs-drift/scripts/docs_drift.py /path/to/your/repo
+# check the current repo
+python3 scripts/docs_drift.py .
+
+# machine-readable
+python3 scripts/docs_drift.py . --format json
+
+# CI gate: fail on anything medium or worse
+python3 scripts/docs_drift.py . --fail-on medium
+
+# widen the source globs if your code isn't *.py/*.js/...
+python3 scripts/docs_drift.py . --source "*.rb" --source "lib/**/*.rb"
+
+# silence a noisy rule or a path
+python3 scripts/docs_drift.py . --ignore DRIFT004 --ignore vendor/
 ```
 
-Requires Python 3.8+.
-
-## Usage
-
-```bash
-docs_drift.py [PATH] [--format markdown|json] [--fail-on LEVEL]
-              [--docs GLOB ...] [--source GLOB ...]
-              [--ignore RULE|PATH ...] [--config FILE] [--version]
-```
-
-| Flag | Meaning |
-|------|---------|
-| `PATH` | Repo root to check (default `.`) |
-| `--format` | `markdown` (default) or `json` |
-| `--fail-on` | Exit `1` if any finding is at/above `info\|low\|medium\|high` |
-| `--docs` | Extra doc globs (repeatable) |
-| `--source` | Override/append source globs (repeatable) |
-| `--ignore` | Silence a rule id (`DRIFT004`) or a path; repeatable |
-| `--config` | JSON file: `{"ignore": [...], "docs": [...], "source": [...]}` |
-
-Exit codes: `0` clean / below threshold · `1` finding at/above `--fail-on` · `2` usage or IO error.
+Standard library only (Python 3.8+). No `pip install`.
 
 ## Rules
 
@@ -70,22 +55,49 @@ Exit codes: `0` clean / below threshold · `1` finding at/above `--fail-on` · `
 | DRIFT000 | info | No markdown documentation found |
 | DRIFT010 | info | No source files found; symbol/flag checks skipped |
 
-Code fences are masked before structure is parsed, so a `## Heading` or `[link](x)` inside a code sample is never treated as real documentation.
+Code fences are masked before any structure is parsed, so a `## Heading` or a `[link](x)` inside a code sample is never treated as real documentation — and a 4-backtick fence is not closed early by a 3-backtick line inside it. Links inside inline code are ignored for the same reason, and URL-encoded targets (`my%20doc.md`) resolve correctly. DRIFT004 and DRIFT005 are deliberately heuristics and marked low/medium; everything else is exact.
+
+## Output and exit codes
+
+- **markdown** (default): root, a severity tally, then one section per finding with rule id, severity, `path:line`, message, and a suggested fix.
+- **json**: `{tool, version, root, summary, findings[]}` — stable shape for CI.
+
+Exit codes: `0` clean or below `--fail-on`; `1` a finding at or above `--fail-on`; `2` usage/IO error.
+
+## Scopes it on purpose
+
+`docs-drift` reads files and prints a report — it never edits a file, never rewrites prose, and never "tidies" a README. It does not judge tone, clarity, grammar, or whether a claim is *true*, only whether links resolve, versions match, and named symbols exist. It is **not** a plagiarism or similarity checker, and must not be used to detect or evade one. See `SKILL.md` → *Guardrails*.
 
 ## CI
 
 ```yaml
-- run: python3 docs-drift/scripts/docs_drift.py . --fail-on medium
+- run: python3 scripts/docs_drift.py . --fail-on medium
 ```
 
-## What it is not
+## Tests
 
-Not a prose editor, not a grammar or tone checker, not a plagiarism/similarity tool. It never rewrites your docs — deleting or correcting a stale line is your call. See `SKILL.md` for the full guardrails.
+```bash
+python3 -m unittest discover -s tests      # zero-dependency
+# or:  pytest tests/
+```
 
-## Also an Agent Skill
+31 tests covering every rule, the anchor slugging, code-fence masking (including nested and `~~~` fences), URL-decoding, the CHANGELOG exemption, and the CLI contract (exit codes, `--ignore`, `--fail-on`, JSON shape). Everything runs offline against temporary fixture repos.
 
-This repo is also a self-contained Agent Skill: [`SKILL.md`](SKILL.md) contains the workflow, the guardrails, and the full script inline.
+## Repo layout
+
+```
+SKILL.md                       # the skill: when to use, how, guardrails
+scripts/docs_drift.py          # the checker (stdlib only)
+tests/test_docs_drift.py       # unittest suite (offline)
+assets/                        # banner + demo (SVG)
+CHANGELOG.md
+.github/workflows/ci.yml       # tests on 3.9 / 3.11 / 3.12
+```
+
+## 中文简介
+
+`docs-drift` 是一个 Agent Skill：拿你的 markdown 文档和源码树对一遍，把**机械可验证**的漂移点报出来——死链、失效锚点、文档里的版本号与 manifest 不一致、文档提到的标识符/命令行 flag 在源码里已经不存在、CHANGELOG 缺当前版本的条目。解析前会屏蔽代码块，所以示例里的 `## 标题` 或 `[链接](x)` 不会被当成真实文档结构。只用 Python 标准库，零依赖；**只读、不改写文字**，也不做查重降重。把文件夹放进你的 skills 目录，然后问 agent"重构之后我的 README 还准吗"即可。
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT

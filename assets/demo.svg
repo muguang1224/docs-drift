@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" role="img" aria-label="docs-drift — find where documentation stopped matching the code terminal demo">
+  <rect width="1280" height="440" rx="14" fill="#0b0f14"/>
+  <rect width="1280" height="440" rx="14" fill="none" stroke="#30363d"/>
+  <line x1="0" y1="42" x2="1280" y2="42" stroke="#30363d"/>
+  <circle cx="26" cy="21" r="7" fill="#ff5f56"/>
+  <circle cx="50" cy="21" r="7" fill="#ffbd2e"/>
+  <circle cx="74" cy="21" r="7" fill="#27c93f"/>
+  <text x="640" y="27" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace" font-size="14" fill="#8b949e">docs-drift</text>
+  <g font-family="ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace" font-size="16">
+    <text x="34" y="78" fill="#a5d6ff">$ </text><text x="53" y="78" fill="#c9d1d9">python3 scripts/docs_drift.py . --fail-on medium</text><text x="34" y="103" fill="#f0f6fc" font-weight="700"># docs-drift report</text><text x="34" y="128" fill="#c9d1d9">**3 finding(s)** - 1 high, 1 medium, 1 low</text><text x="34" y="178" fill="#58a6ff">## DRIFT003 [HIGH] README.md</text><text x="34" y="203" fill="#c9d1d9">documentation cites version 0.9.0 but pyproject.toml says 1.0.0</text><text x="34" y="253" fill="#58a6ff">## DRIFT005 [MEDIUM] README.md:42</text><text x="34" y="278" fill="#c9d1d9">documented flag --frobnicate is not defined anywhere in source</text><text x="34" y="328" fill="#58a6ff">## DRIFT001 [MEDIUM] docs/guide.md:12</text><text x="34" y="353" fill="#c9d1d9">relative link target does not exist: setup.md</text><text x="34" y="403" fill="#f85149">exit 1</text><text x="91" y="403" fill="#8b949e"> - gate failed on: high</text><text x="34" y="428" fill="#8b949e">The README promised a flag that no longer exists.</text>
+  </g>
+</svg>
